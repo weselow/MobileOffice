@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model Dashboard.Models.MainPageModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    
+    <div>
+        @if (Model.Errors.Any())
+        {
+            foreach (var msg in Model.Errors)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @msg
+                </div>
+            }
+        }
+        @if (Model.Warnings.Any())
+        {
+            foreach (var msg in Model.Warnings)
+            {
+                <div class="alert alert-warning" role="alert">
+                    @msg
+                </div>
+            }
+        }
+        @if (Model.Info.Any())
+        {
+            foreach (var msg in Model.Warnings)
+            {
+                <div class="alert alert-info" role="alert">
+                    @msg
+                </div>
+            }
+        }
+    </div>
+    
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a class="btn btn-primary" asp-controller="Home" asp-action="Add" role="button">+ Add Proxy</a>
+    </div>
+
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Host</th>
+                <th>Port</th>
+                <th>External Ip</th>
+                <th>Connection Ip</th>
+                <th>Operations</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var t in Model.Modems)
+            {
+                <tr>
+                    <td><small>@t.Port</small></td>
+                    <td><small>@t.Host</small></td>
+                    <td><small>@t.Port</small></td>
+                    <td><small>@t.ExternalIp</small></td>
+                    <td><small>@t.Proxy.Ip</small></td>
+                    <td><a asp-controller="Home" asp-action="Reboot" asp-route-id="@t.Port">Reboot</a>
+                            <a asp-controller="Home" asp-action="Logs" asp-route-id="@t.Port">Logs</a>
+                        </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+
+</div>

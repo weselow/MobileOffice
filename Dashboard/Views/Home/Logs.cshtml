@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Logs";
+}
+@model Dictionary<DateTime, string>
+
+
+<h1>@ViewData["Title"]</h1>
+
+
+@foreach (var log in Model)
+{
+    <p>@log.Key.ToString("HH:mm:ss"): @log.Value</p>
+}
+
+<script type="text/javascript">
+    setTimeout(() => {
+        document.location.reload();
+    }, 3000);
+</script>
