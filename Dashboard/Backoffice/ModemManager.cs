@@ -1,4 +1,5 @@
-﻿using Dashboard.Backoffice.Huawei;
+﻿using System.Collections.Concurrent;
+using Dashboard.Backoffice.Huawei;
 using Dashboard.Backoffice.Models;
 using Dashboard.Backoffice.Zte;
 
@@ -6,8 +7,9 @@ namespace Dashboard.Backoffice
 {
     public static class ModemManager
     {
-        public static  Dictionary<int, Modem> Modems { get; set; } = new();
+        public static Dictionary<int, Modem> Modems { get; set; } = new();
         public static ExternalIpMonitor IpMonitor { get; set; }
+        private static ConcurrentDictionary<int, Modem> ModemInProgress { get; set; } = new();
 
         static ModemManager()
         {
@@ -73,6 +75,10 @@ namespace Dashboard.Backoffice
         {
             if (!Modems.ContainsKey(id)) return false;
 
+            //исключаем возможность одновременной перезагрузки одного и того же модема
+            while (ModemInProgress.Keys.Contains(id)) Thread.Sleep(500);
+            while (ModemInProgress.TryAdd(id, Modems[id])) Thread.Sleep(500);
+
             switch (Modems[id].Type)
             {
                 case ModemTypeEnum.Huawei:
@@ -87,8 +93,7 @@ namespace Dashboard.Backoffice
                     break;
             }
 
-            _ = await ExternalIpMonitor.UpdateExternalIpAsync(modem: Modems[id]);
-
+            ModemInProgress.TryRemove(id, out _);
 
             return true;
         }

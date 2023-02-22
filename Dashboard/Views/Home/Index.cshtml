@@ -63,8 +63,10 @@
                     <td><small>@t.Port</small></td>
                     <td><small>@t.ExternalIp</small></td>
                     <td><small>@t.Proxy.Ip</small></td>
-                    <td><a asp-controller="Home" asp-action="Reboot" asp-route-id="@t.Port">Reboot</a>
-                            <a asp-controller="Home" asp-action="Logs" asp-route-id="@t.Port">Logs</a>
+                        <td>
+                            <a class="btn btn-danger btn-sm" asp-controller="Home" asp-action="Reboot" asp-route-id="@t.Port">Reboot</a>
+                            <a class="btn btn-success btn-sm" asp-controller="Home" asp-action="Edit" asp-route-id="@t.Port">Edit</a>
+                            <a class="btn btn-info btn-sm" asp-controller="Home" asp-action="Logs" asp-route-id="@t.Port">Logs</a>
                         </td>
                 </tr>
             }

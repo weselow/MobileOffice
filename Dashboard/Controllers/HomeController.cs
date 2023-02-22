@@ -50,6 +50,12 @@ namespace Dashboard.Controllers
             return View();
         }
 
+        public IActionResult Edit(int id)
+        {
+            ViewBag.Id = id;
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
