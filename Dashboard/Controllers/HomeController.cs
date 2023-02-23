@@ -24,7 +24,12 @@ namespace Dashboard.Controllers
             GetMessages(model);
             return View(model);
         }
-        
+
+        public IActionResult UpdateExternalIp(int id)
+        {
+            if(_modems.ContainsKey(id)) _ = ExternalIpMonitor.UpdateExternalIpAsync(modem: _modems[id]);
+            return RedirectToAction("Index");
+        }
         public IActionResult Reboot (int id)
         {
             if (_modems.ContainsKey(id))
@@ -45,15 +50,37 @@ namespace Dashboard.Controllers
             return View(_modems[id].Logs);
         }
 
-        public IActionResult Add()
-        {
-            return View();
-        }
-
         public IActionResult Edit(int id)
         {
-            ViewBag.Id = id;
-            return View();
+            Modem modem =  new Modem();
+            if (!_modems.ContainsKey(id) | id == 0)
+            {
+                ViewData["Title"] = "Add New Proxy";
+            }
+            else
+            {
+                ViewData["Title"] = $"Edit Proxy {id}";
+                modem = _modems[id];
+            }
+                 
+            return View(modem);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Modem modem)
+        {
+            if (!_modems.ContainsKey(modem.Port))
+            {
+                //добавляем модем
+                _modems.Add(modem.Port, modem);
+                MessageCenter.Info.Add("Модем был успешно добавлен.");
+            }
+            else if (_modems.ContainsKey(modem.Port))
+            { 
+                _modems[modem.Port].CopyFrom(modem);
+                MessageCenter.Info.Add("Сведения о модеме были успешно обновлены.");
+            }
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

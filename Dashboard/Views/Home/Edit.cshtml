@@ -1,5 +1,73 @@
-﻿@{
-    ViewData["Title"] = "Edit Proxy";
-}
-<h1>@ViewData["Title"] @ViewBag.Id</h1>
-<p>Страница в разработке.</p>
+﻿@using Dashboard.Backoffice.Models
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Dashboard.Backoffice.Models.Modem
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Edit" asp-controller="Home">
+    <div class="container">
+        <div class="row">
+
+            <div class="col">
+                <h3>Modem:</h3>
+                <table class="table table-borderless">
+                    <tr>
+                        <td><label asp-for="Type"></label></td>
+                        <td>
+                            <select asp-for="Type" asp-items="Html.GetEnumSelectList<ModemTypeEnum>()">
+                                <option selected="selected" value="@Model.Type"></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="Host"></label></td>
+                        <td><input type="text" asp-for="Host" value="@Model.Host" /></td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="Port"></label></td>
+                        <td><input type="text" asp-for="Port" value="@Model.Port" /></td>
+                    </tr>
+                </table>
+
+            </div>
+
+            <div class="col">
+                <h3>Proxy:</h3>
+                <table class="table table-borderless">
+                    <tr>
+                        <td><label asp-for="Proxy.Type"></label></td>
+                        <td>
+                            <select asp-for="Type" asp-items="Html.GetEnumSelectList<ProxyTypeEnum>()">
+                                <option selected="selected" value="@Model.Proxy.Type"></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="Proxy.Login"></label></td>
+                        <td><input type="text" asp-for="Proxy.Login" value="@Model.Proxy.Login" /></td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="Proxy.Password"></label></td>
+                        <td><input type="text" asp-for="Proxy.Password" value="@Model.Proxy.Password" /></td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="Proxy.Ip"></label></td>
+                        <td><input type="text" asp-for="Proxy.Ip" value="@Model.Proxy.Ip" /></td>
+                    </tr>
+                    <tr>
+                        <td><label asp-for="Proxy.Port"></label></td>
+                        <td><input type="text" asp-for="Proxy.Port" value="@Model.Proxy.Port" /></td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="d-grid gap-2">
+            <input class="btn btn-primary" type="submit" value="Сохранить" />
+        </div>
+
+    </div>
+
+
+</form>

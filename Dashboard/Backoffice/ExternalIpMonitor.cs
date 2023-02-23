@@ -15,7 +15,7 @@ namespace Dashboard.Backoffice
         public ExternalIpMonitor(Dictionary<int, Modem> modems)
         {
             Modems = modems;
-            Atimer = new System.Timers.Timer(5 * 60 * 1000) { AutoReset = true, Enabled = true };
+            Atimer = new System.Timers.Timer( 5 * 60 * 1000) { AutoReset = true, Enabled = true };
             Atimer.Elapsed += UpdateAllExternalIps;
             UpdateAllExternalIps();
         }

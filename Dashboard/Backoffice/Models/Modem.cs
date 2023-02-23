@@ -1,9 +1,14 @@
-﻿namespace Dashboard.Backoffice.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Dashboard.Backoffice.Models
 {
     public class Modem
     {
+        [Display(Name="Ip адрес модема (host)")]
         public string Host { get; set; } = string.Empty;
+        [Display(Name = "Порт модема (порт)")]
         public int Port { get; set; }
+        [Display(Name = "Производитель модема")]
         public ModemTypeEnum Type { get; set; }
         public string ExternalIp { get; set; } = string.Empty;
         public Proxy Proxy { get; set; } = new();
@@ -33,6 +38,16 @@
             }
 
 
+        }
+
+        public bool CopyFrom(Modem newData)
+        {
+            this.Host = newData.Host;
+            this.Port = newData.Port;
+            this.Type = newData.Type;
+            this.ExternalIp = newData.ExternalIp;
+            this.Proxy = newData.Proxy;
+            return true;
         }
     }
 }
