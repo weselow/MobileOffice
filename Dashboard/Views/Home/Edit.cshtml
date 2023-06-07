@@ -3,7 +3,7 @@
 @model Dashboard.Backoffice.Models.Modem
 
 @section Scripts
-{
+    {
     <partial name="_ValidationScriptsPartial" />
 }
 
@@ -29,23 +29,30 @@
                     </tr>
                     <tr>
                         <td><label asp-for="Host"></label></td>
-                        <td><input type="text" asp-for="Host" value="@Model.Host" />
+                        <td>
+                            <input type="text" asp-for="Host" value="@Model.Host" />
                             <small><span asp-validation-for="Host"></span></small>
                         </td>
                     </tr>
                     <tr>
                         <td><label asp-for="Port"></label></td>
-                        <td><input type="text" asp-for="Port" value="@Model.Port" />
+                        <td>
+                            <input type="text" asp-for="Port" value="@Model.Port" />
                             <small><span asp-validation-for="Port"></span></small>
                         </td>
                     </tr>
                     <tr>
                         <td><label asp-for="IfTimerRebootAllowed"></label></td>
-                        <td> <input class="form-check-input" type="checkbox" asp-for="IfTimerRebootAllowed"></td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" asp-for="IfTimerRebootAllowed">
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td><label asp-for="RebootDelay"></label></td>
-                        <td><input type="text" asp-for="RebootDelay" value="@Model.RebootDelay" />
+                        <td>
+                            <input type="text" asp-for="RebootDelay" value="@Model.RebootDelay" />
                             <small><span asp-validation-for="RebootDelay"></span></small>
                         </td>
                     </tr>
@@ -74,13 +81,15 @@
                     </tr>
                     <tr>
                         <td><label asp-for="Proxy.Ip"></label></td>
-                        <td><input type="text" asp-for="Proxy.Ip" value="@Model.Proxy.Ip" />
+                        <td>
+                            <input type="text" asp-for="Proxy.Ip" value="@Model.Proxy.Ip" />
                             <small><span asp-validation-for="Proxy.Ip"></span></small>
                         </td>
                     </tr>
                     <tr>
                         <td><label asp-for="Proxy.Port"></label></td>
-                        <td><input type="text" asp-for="Proxy.Port" value="@Model.Proxy.Port" />
+                        <td>
+                            <input type="text" asp-for="Proxy.Port" value="@Model.Proxy.Port" />
                             <small><span asp-validation-for="Proxy.Port"></span></small>
                         </td>
                     </tr>

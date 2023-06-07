@@ -3,6 +3,14 @@
 }
 @model Dictionary<DateTime, string>
 
+@section Scripts
+{
+    <script>
+        setTimeout(() => {
+            document.location.reload();
+        }, 1000);
+    </script>
+}
 
 <h1>@ViewData["Title"]</h1>
 
@@ -10,7 +18,7 @@
 @foreach (var log in Model)
 {
     <dl class="row small">
-        <dt class="col-sm-3">@log.Key.ToString("HH:mm:ss"):</dt>
-        <dd class="col-sm-9">@log.Value</dd>
+        <dt class="col-sm-1">@log.Key.ToString("HH:mm:ss")</dt>
+        <dd class="col-sm-11">@log.Value</dd>
     </dl>
 }
