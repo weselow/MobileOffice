@@ -22,7 +22,8 @@ namespace Dashboard.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            MainPageModel model = new MainPageModel();
+            return View(model);
         }
 
         public IActionResult GetNewMessages()
@@ -123,6 +124,12 @@ namespace Dashboard.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult Delete(int id)
+        {
+            _ = ModemManager.DeleteModemAsync(id);
+            return RedirectToAction("Index");
         }
 
 

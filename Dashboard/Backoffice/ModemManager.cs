@@ -32,7 +32,7 @@ namespace Dashboard.Backoffice
         private static void OnTimerEvent(object? sender, ElapsedEventArgs e)
         {
             foreach (var m in Modems
-                         .Where(t=>t.Value.IfTimerRebootAllowed 
+                         .Where(t => t.Value.IfTimerRebootAllowed
                                    & (DateTime.Now - t.Value.LastRebootedTime).TotalMinutes > t.Value.RebootDelay))
             {
                 _ = RebootModemAsync(m.Key);
@@ -64,6 +64,20 @@ namespace Dashboard.Backoffice
             Modems[id].LastRebootedTime = DateTime.Now;
             ModemInProgress.TryRemove(id, out _);
 
+            return true;
+        }
+
+        public static async Task<bool> DeleteModemAsync(int id)
+        {
+            await Task.Run(() => true);
+            if (!Modems.ContainsKey(id)) return false;
+            while (ModemInProgress.Keys.Contains(id)) Thread.Sleep(500);
+            while (Modems.ContainsKey(id) && !Modems.Remove(id))
+            {
+                MessageCenter.Info.Add($"Не смогли удалить модем {id}.");
+                Thread.Sleep(500);
+            }
+            MessageCenter.Warnings.Add($"Успешно удален модем {id}.");
             return true;
         }
     }
