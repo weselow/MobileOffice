@@ -1,0 +1,43 @@
+﻿@model Dashboard.Models.MainPageModel
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Host</th>
+        <th>Port</th>
+        <th>External Ip</th>
+        <th></th>
+        <th>Connection Ip</th>
+        <th>Operations</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var t in Model.Modems)
+    {
+        <tr>
+            <td><small>@t.Port</small></td>
+            <td><small>@t.Host</small></td>
+            <td><small>@t.Port</small></td>
+            <td>@if (string.IsNullOrEmpty(t.ExternalIp))
+                {
+                    <div class="spinner-border text-warning" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                }
+                else
+                {
+                    <small>@t.ExternalIp</small>
+                }
+            </td>
+            <td><a asp-controller="Home" asp-action="UpdateExternalIp" asp-route-id="@t.Port"><img src="~/img/repeat.svg" /></a></td>
+            <td><small>@t.Proxy.Ip</small></td>
+            <td>
+                <a class="btn btn-danger btn-sm" asp-controller="Home" asp-action="Reboot" asp-route-id="@t.Port">Reboot</a>
+                <a class="btn btn-success btn-sm" asp-controller="Home" asp-action="Edit" asp-route-id="@t.Port">Edit</a>
+                <a class="btn btn-info btn-sm" asp-controller="Home" asp-action="Logs" asp-route-id="@t.Port">Logs</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Concurrent;
-using System.Text.Json.Serialization;
-using System.Text.Json;
+using System.Timers;
 using Dashboard.Backoffice.Huawei;
 using Dashboard.Backoffice.Models;
 using Dashboard.Backoffice.Zte;
+using Timer = System.Timers.Timer;
 
 namespace Dashboard.Backoffice
 {
@@ -14,6 +14,8 @@ namespace Dashboard.Backoffice
         private static ConcurrentDictionary<int, Modem> ModemInProgress { get; set; }
         public static SettingsMonitor SettingsMonitor { get; set; }
 
+        private static Timer Atimer { get; set; }
+
         static ModemManager()
         {
             Modems = new();
@@ -21,7 +23,22 @@ namespace Dashboard.Backoffice
             SettingsMonitor = new(modems: Modems);
             SettingsMonitor.LoadSettings();
             IpMonitor = new(modems: Modems);
+
+            //запускаем таймер раз в минуту
+            Atimer = new(60 * 1000) { AutoReset = true, Enabled = true };
+            Atimer.Elapsed += OnTimerEvent;
         }
+
+        private static void OnTimerEvent(object? sender, ElapsedEventArgs e)
+        {
+            foreach (var m in Modems
+                         .Where(t=>t.Value.IfTimerRebootAllowed 
+                                   & (DateTime.Now - t.Value.LastRebootedTime).TotalMinutes > t.Value.RebootDelay))
+            {
+                _ = RebootModemAsync(m.Key);
+            }
+        }
+
         public static async Task<bool> RebootModemAsync(int id)
         {
             if (!Modems.ContainsKey(id)) return false;
@@ -44,6 +61,7 @@ namespace Dashboard.Backoffice
                     break;
             }
 
+            Modems[id].LastRebootedTime = DateTime.Now;
             ModemInProgress.TryRemove(id, out _);
 
             return true;

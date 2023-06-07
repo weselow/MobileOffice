@@ -9,7 +9,8 @@
 
 @foreach (var log in Model)
 {
-    <p>@log.Key.ToString("HH:mm:ss"): @log.Value</p>
+    <dl class="row small">
+        <dt class="col-sm-3">@log.Key.ToString("HH:mm:ss"):</dt>
+        <dd class="col-sm-9">@log.Value</dd>
+    </dl>
 }
-
-<script src="~/js/reload.js"></script>

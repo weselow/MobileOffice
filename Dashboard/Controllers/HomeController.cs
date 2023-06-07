@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Dashboard.Backoffice;
 using Dashboard.Backoffice.Models;
+using Controller = Microsoft.AspNetCore.Mvc.Controller;
+
 
 namespace Dashboard.Controllers
 {
@@ -10,7 +12,7 @@ namespace Dashboard.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly Dictionary<int, Modem> _modems;
-        
+
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -20,17 +22,51 @@ namespace Dashboard.Controllers
 
         public IActionResult Index()
         {
-            MainPageModel model = new MainPageModel();
-            GetMessages(model);
-            return View(model);
+            return View();
         }
+
+        public IActionResult GetNewMessages()
+        {
+            MessageData msg = new();
+            if (MessageCenter.Errors.Any())
+            {
+                msg.danger.AddRange(MessageCenter.Errors);
+                MessageCenter.Errors.Clear();
+            }
+
+            if (MessageCenter.Warnings.Any())
+            {
+                msg.Warning.AddRange(MessageCenter.Warnings);
+                MessageCenter.Warnings.Clear();
+            }
+
+            if (MessageCenter.Info.Any())
+            {
+                msg.Info.AddRange(MessageCenter.Info);
+                MessageCenter.Info.Clear();
+            }
+
+            //msg.danger.Add("Test Danger Текст");
+            //msg.Info.Add("Test Info Текст");
+            //msg.Warning.Add("Test Warn Текст");
+
+            return Json(msg);
+        }
+
+        public IActionResult GetData()
+        {
+            MainPageModel model = new MainPageModel();
+            return PartialView(model);
+        }
+
+
 
         public IActionResult UpdateExternalIp(int id)
         {
-            if(_modems.ContainsKey(id)) _ = ExternalIpMonitor.UpdateExternalIpAsync(modem: _modems[id]);
+            if (_modems.ContainsKey(id)) _ = ExternalIpMonitor.UpdateExternalIpAsync(modem: _modems[id]);
             return RedirectToAction("Index");
         }
-        public IActionResult Reboot (int id)
+        public IActionResult Reboot(int id)
         {
             if (_modems.ContainsKey(id))
             {
@@ -43,7 +79,7 @@ namespace Dashboard.Controllers
             }
             return RedirectToAction("Index");
         }
-       
+
         public IActionResult Logs(int id)
         {
             if (!_modems.ContainsKey(id) | id == 0) return View();
@@ -52,7 +88,7 @@ namespace Dashboard.Controllers
 
         public IActionResult Edit(int id)
         {
-            Modem modem =  new Modem();
+            Modem modem = new Modem();
             if (!_modems.ContainsKey(id) | id == 0)
             {
                 ViewData["Title"] = "Add New Proxy";
@@ -62,11 +98,11 @@ namespace Dashboard.Controllers
                 ViewData["Title"] = $"Edit Proxy {id}";
                 modem = _modems[id];
             }
-                 
+
             return View(modem);
         }
 
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public IActionResult Edit(Modem modem)
         {
             if (!_modems.ContainsKey(modem.Port))
@@ -76,7 +112,7 @@ namespace Dashboard.Controllers
                 MessageCenter.Info.Add("Модем был успешно добавлен.");
             }
             else if (_modems.ContainsKey(modem.Port))
-            { 
+            {
                 _modems[modem.Port].CopyFrom(modem);
                 MessageCenter.Info.Add("Сведения о модеме были успешно обновлены.");
             }
@@ -89,26 +125,6 @@ namespace Dashboard.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private void GetMessages(MainPageModel model)
-        {
-            if (MessageCenter.Errors.Any())
-            {
-                model.Errors.AddRange(MessageCenter.Errors);
-                MessageCenter.Errors.Clear();
-            }
 
-            if (MessageCenter.Warnings.Any())
-            {
-               model.Warnings.AddRange(MessageCenter.Warnings);
-               MessageCenter.Warnings.Clear();
-            }
-
-            if (MessageCenter.Info.Any())
-            {
-                model.Info.AddRange(MessageCenter.Info);
-                MessageCenter.Info.Clear();
-            }
-            
-        }
     }
 }

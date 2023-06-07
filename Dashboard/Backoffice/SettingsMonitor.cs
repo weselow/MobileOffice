@@ -1,9 +1,7 @@
 ﻿using System.Text.Json;
-using Dashboard.Backoffice.Helpers;
 using Dashboard.Backoffice.Models;
 using System.Timers;
 using System.Text.Json.Serialization;
-using System.Collections.Generic;
 
 namespace Dashboard.Backoffice
 {
@@ -51,7 +49,7 @@ namespace Dashboard.Backoffice
             }
             catch (Exception e)
             {
-                MessageCenter.Errors.Add("Ошибка при чтении файла настроек.");
+                MessageCenter.Errors.Add($"Ошибка при чтении файла настроек - {e.Message}.");
                 return false;
             }
 
@@ -64,7 +62,7 @@ namespace Dashboard.Backoffice
             }
             catch (Exception e)
             {
-                MessageCenter.Errors.Add("Ошибка при десериализации настроек.");
+                MessageCenter.Errors.Add($"Ошибка при десериализации настроек - {e.Message}.");
                 return false;
             }
 
@@ -94,40 +92,6 @@ namespace Dashboard.Backoffice
                 }
             };
             Modems.Add(m1.Port, m1);
-
-            //192.168.3.1, huawei
-            Modem m2 = new Modem()
-            {
-                Host = "192.168.3.1",
-                Port = 8003,
-                Type = ModemTypeEnum.Huawei,
-                Proxy = new Proxy
-                {
-                    Type = ProxyTypeEnum.http,
-                    Login = "viking01",
-                    Password = "A000000a",
-                    Ip = "100.92.194.11",
-                    Port = 8003
-                }
-            };
-            Modems.Add(m2.Port, m2);
-
-            //192.168.9.1, zte
-            Modem m3 = new Modem()
-            {
-                Host = "192.168.9.1",
-                Port = 8009,
-                Type = ModemTypeEnum.Huawei,
-                Proxy = new Proxy
-                {
-                    Type = ProxyTypeEnum.http,
-                    Login = "viking01",
-                    Password = "A000000a",
-                    Ip = "100.92.194.11",
-                    Port = 8009
-                }
-            };
-            Modems.Add(m3.Port, m3);
         }
 
         public async void SaveAsync(Object? source = null, ElapsedEventArgs? e = null)

@@ -1,81 +1,32 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@model Dashboard.Models.MainPageModel
+
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@section Scripts
+{
+    <script src="~/js/reload.js"></script>
+    <script src="~/js/show-messages.js"></script> 
+    <script>
+        updatePartialView();
+    </script>
+}
+ 
 
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
 
-    <div>
-        @if (Model.Errors.Any())
-        {
-            foreach (var msg in Model.Errors)
-            {
-                <div class="alert alert-danger" role="alert">
-                    @msg
-                </div>
-            }
-        }
-        @if (Model.Warnings.Any())
-        {
-            foreach (var msg in Model.Warnings)
-            {
-                <div class="alert alert-warning" role="alert">
-                    @msg
-                </div>
-            }
-        }
-        @if (Model.Info.Any())
-        {
-            foreach (var msg in Model.Warnings)
-            {
-                <div class="alert alert-info" role="alert">
-                    @msg
-                </div>
-            }
-        }
-    </div>
-
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <a class="btn btn-primary" asp-controller="Home" asp-action="Edit" role="button">+ Add Proxy</a>
     </div>
 
-    <div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Host</th>
-                    <th>Port</th>
-                    <th>External Ip</th>
-                    <th></th>
-                    <th>Connection Ip</th>
-                    <th>Operations</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var t in Model.Modems)
-                {
-                    <tr>
-                        <td><small>@t.Port</small></td>
-                        <td><small>@t.Host</small></td>
-                        <td><small>@t.Port</small></td>
-                        <td><small>@t.ExternalIp</small> </td>
-                        <td><a asp-controller="Home" asp-action="UpdateExternalIp" asp-route-id="@t.Port"><img src="~/img/repeat.svg" /></a></td>
-                        <td><small>@t.Proxy.Ip</small></td>
-                        <td>
-                            <a class="btn btn-danger btn-sm" asp-controller="Home" asp-action="Reboot" asp-route-id="@t.Port">Reboot</a>
-                            <a class="btn btn-success btn-sm" asp-controller="Home" asp-action="Edit" asp-route-id="@t.Port">Edit</a>
-                            <a class="btn btn-info btn-sm" asp-controller="Home" asp-action="Logs" asp-route-id="@t.Port">Logs</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+    <div id="partialViewContainer"></div>
+
+    <!-- Контейнер для toast-уведомлений -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" aria-live="polite" aria-atomic="true"></div>
 
 </div>
 
-<script src="~/js/reload.js"></script>
+
