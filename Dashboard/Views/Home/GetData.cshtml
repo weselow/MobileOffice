@@ -27,7 +27,8 @@
                 }
                 else
                 {
-                    <small>@t.ExternalIp</small>
+                        <div><small>@t.ExternalIp</small></div>
+                        <div class="text-end fw-lighter text-black-50"><small>@t.PrevExternalIp</small></div>
                 }
             </td>
             <td><a asp-controller="Home" asp-action="UpdateExternalIp" asp-route-id="@t.Port"><img src="~/img/repeat.svg" /></a></td>

@@ -13,12 +13,13 @@ namespace Dashboard.Backoffice.Huawei
             Stopwatch sw = Stopwatch.StartNew();
 
             var oldIp = await HttpTools.GetExternalIp(modem.Proxy);
+            modem.PrevExternalIp = oldIp;
             modem.AddLogMessage($@"Результат запроса внешнего ip до перезагрузки: {oldIp}.");
 
             //пробуем первый вариант перезагрузки
             modem.AddLogMessage($@"Запускаем перезагрузку RebootByNetSwitchAsync.");
             var sResult = await RebootByNetSwitchAsync(modem: modem);
-            Thread.Sleep(3*1000);
+            Thread.Sleep(5*1000);
             modem.AddLogMessage($@"Результат перезагрузки RebootByNetSwitchAsync: {sResult}.");
 
             modem.ExternalIp = await HttpTools.GetExternalIp(modem.Proxy);
@@ -27,7 +28,9 @@ namespace Dashboard.Backoffice.Huawei
             {
                 //если перезагрузка вернула true, и получен новый ip
                 //то операция прошла успешно.
-                modem.AddLogMessage($"Перезагрузка заняла {sw.ElapsedMilliseconds} мс., oldIp {oldIp}, newIp {modem.ExternalIp}");
+                var msg = $"Перезагрузка модема {modem.Port} заняла {sw.ElapsedMilliseconds/1000} сек, oldIp {oldIp}, newIp {modem.ExternalIp}";
+                modem.AddLogMessage(msg);
+                MessageCenter.Info.Add(msg);
                 return true;
             }
 
@@ -43,12 +46,16 @@ namespace Dashboard.Backoffice.Huawei
             {
                 //если перезагрузка вернула true, и получен новый ip
                 //то операция прошла успешно.
-                modem.AddLogMessage($"Перезагрузка заняла {sw.ElapsedMilliseconds} мс., oldIp {oldIp}, newIp {modem.ExternalIp}");
+                var msg = $"Перезагрузка модема {modem.Port} заняла {sw.ElapsedMilliseconds/1000} сек, oldIp {oldIp}, newIp {modem.ExternalIp}";
+                modem.AddLogMessage(msg);
+                MessageCenter.Info.Add(msg);
                 return true;
             }
 
             //в остальных случаях возвращем false
-            modem.AddLogMessage($"Перезагрузка заняла {sw.ElapsedMilliseconds} мс., oldIp {oldIp}, newIp {modem.ExternalIp}");
+            var mc = $"Перезагрузка c ошибкой, заняла {sw.ElapsedMilliseconds/1000} сек, oldIp {oldIp}, newIp {modem.ExternalIp}";
+            modem.AddLogMessage(mc);
+            MessageCenter.Errors.Add(mc);
             return false;
         }
 

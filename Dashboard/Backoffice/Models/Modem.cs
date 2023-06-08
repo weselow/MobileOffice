@@ -15,6 +15,7 @@ namespace Dashboard.Backoffice.Models
         [Display(Name = "Производитель модема")]
         public ModemTypeEnum Type { get; set; }
         public string ExternalIp { get; set; } = string.Empty;
+        public string PrevExternalIp { get; set; } = string.Empty;
         public Proxy Proxy { get; set; } = new();
         public Dictionary<DateTime, string> Logs { get; set; } = new();
         private int LogsLimit { get; set; } = 100;
